@@ -44,6 +44,23 @@ const thoughtController = {
                     new: true,
                 }
             );
+
+            res.json(dbThoughtData);
+        } catch (err) {
+            console.log(err);
+            res.status(500).json(err);
         }
-    }
+    },
+
+    async deleteThought(req, res) {
+        try {
+            const dbTHoughtData = await User.findOneAndDelete({_id: req.params.thoughtId})
+            res.json({message: 'Thought deleted'});
+        } catch (err) {
+            console.log(err);
+            res.status(500).json(err);
+        }
+    },
 }
+
+module.exports = thoughtController;
