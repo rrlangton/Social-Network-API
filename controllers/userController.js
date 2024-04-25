@@ -1,4 +1,4 @@
-const { User } = require('../models/user');
+const { User } = require('../models');
 
 module.exports = {
   async getUsers(req, res) {
@@ -6,6 +6,7 @@ module.exports = {
       const users = await User.find();
       res.json(users);
     } catch (err) {
+      console.log(err);
       res.status(500).json(err);
     }
   },
@@ -32,4 +33,64 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  async updateUser(req, res) {
+    try {
+        const dbUserData = await User.findOneAndUpdate(
+            {_id: req.params.userId},
+            {
+                $set: req.body,
+            },
+            {
+                runValidators: true,
+                new: true,
+            }
+        );
+
+        res.json(dbUserData);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+},
+
+async deleteUser(req, res) {
+    try {
+        const dbUserData = await User.findOneAndDelete({_id: req.params.userId})
+        res.json({message: 'User deleted'});
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+},
+async addFriend(req, res) {
+  try {
+      const dbUserData = await User.findOneAndUpdate({
+          _id: req.params.userId
+      }, {
+          $push: {
+              friends: req.params.friendId
+          }
+      })
+      res.json(dbUserData)
+  } catch(err) {
+      console.log(err)
+      res.status(500).json(err)
+  }
+},
+
+async removeFriend(req, res) {
+  try {
+      const dbUserData = await User.findOneAndUpdate({
+          _id: req.params.userId
+      }, {
+          $pull: {
+              friends: req.params.friendId
+          }
+      })
+      res.json(dbUserData)
+  } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+  }
+},
 };

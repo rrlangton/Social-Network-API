@@ -1,30 +1,19 @@
-const { Reaction } = require('../models');
+const { Thought } = require('../models');
 
 const reactionController = {
-    async getReactions(req, res) {
-        try {
-            const dbReactionData = await Reaction.find()
-            res.json(dbReactionData);
-        } catch (err) {
-            console.log(err);
-            res.status(500).json(err)
-        }
-    },
-
-    async getSingleReaction(req, res) {
-        try {
-            const dbReactionData = await Reaction.findOne({_id: req.params.reactionId})
-            .populate('')
-            res.json(dbReactionData)
-        } catch(err) {
-            console.log(err);
-            res.status(500).json(err)
-        }
-    },
-
+    
     async createReaction(req, res) {
         try {
-            const dbReactionData = await Reaction.create(req.body)
+            const dbReactionData = await Thought.findOneAndUpdate({
+                _id: req.params.thoughtId
+            }, {
+                $push: {
+                    reactions: {
+                        username: req.body.username,
+                        reactionBody: req.body.reactionBody
+                    }
+                }
+            })
             res.json(dbReactionData)
         } catch(err) {
             console.log(err)
@@ -32,35 +21,20 @@ const reactionController = {
         }
     },
 
-    async updateReaction(req, res) {
+    async deleteReaction(req, res) {
         try {
-            const dbReactionData = await Reaction.findOneAndUpdate(
-                {_id: req.params.reactionId},
-                {
-                    $set: req.body,
-                },
-                {
-                    runValidators: true,
-                    new: true,
-                }
-            );
-
+            const dbReactionData = await Thought.findOneAndUpdate({_id: req.params.thoughtId
+                }, { 
+                    $pull: { 
+                        reactions: { _id: req.body.reactionId } 
+                    } 
+                })
             res.json(dbReactionData);
         } catch (err) {
             console.log(err);
             res.status(500).json(err);
         }
     },
-
-    async deleteReaction(req, res) {
-        try {
-            const dbReactionData = await User.findOneAndDelete({_id: req.params.reactionId})
-            res.json({message: 'Reaction deleted'});
-        } catch (err) {
-            console.log(err);
-            res.status(500).json(err);
-        }
-    },
-}
+};
 
 module.exports = reactionController;

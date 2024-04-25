@@ -1,32 +1,21 @@
+const routes = require('./routes');
 const express = require('express');
-const { MongoClient } = require('mongodb');
-const data = require('./models/data');
 
 const app = express();
 const port = 3001;
 
-const connectionStringURI = `mongodb://127.0.0.1:27017`;
+const db = require('./config/connection.js');
 
-const client = new MongoClient(connectionStringURI);
+app.use(express.json());
+app.use(routes);
 
-let db;
-
-const dbName = 'usersDB';
-
-client.connect()
-  .then(() => {
+db.once('open', () => {
     console.log('Connected successfully to MongoDB');
 
-    db = client.db(dbName);
-
-   
     app.listen(port, () => {
       console.log(`Example app listening at http://localhost:${port}`);
     });
-  })
-  .catch((err) => {
-    console.error('Mongo connection error: ', err.message);
   });
+ 
 
-app.use(express.json());
 
