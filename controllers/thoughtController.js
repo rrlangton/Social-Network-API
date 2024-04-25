@@ -1,6 +1,7 @@
 const { Thought } = require('../models');
 
 const thoughtController = {
+    
     async getThoughts(req, res) {
         try {
             const dbThoughtData = await Thought.find()
@@ -61,6 +62,6 @@ const thoughtController = {
             res.status(500).json(err);
         }
     },
-}
+};
 
 module.exports = thoughtController;

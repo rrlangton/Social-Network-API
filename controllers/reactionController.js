@@ -1,7 +1,6 @@
 const { Thought } = require('../models');
 
 const reactionController = {
-    
     async createReaction(req, res) {
         try {
             const dbReactionData = await Thought.findOneAndUpdate({
@@ -23,13 +22,14 @@ const reactionController = {
 
     async deleteReaction(req, res) {
         try {
-            const dbReactionData = await Thought.findOneAndUpdate({_id: req.params.thoughtId
-                }, { 
+            const dbReactionData = await Thought.findOneAndUpdate(
+                {_id: req.params.thoughtId},
+                { 
                     $pull: { 
-                        reactions: { _id: req.body.reactionId } 
+                        reactions: req.params.reactionId 
                     } 
                 })
-            res.json(dbReactionData);
+            res.json(dbReactionData)
         } catch (err) {
             console.log(err);
             res.status(500).json(err);
