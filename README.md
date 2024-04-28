@@ -26,7 +26,7 @@ THEN I am able to successfully create and delete reactions to thoughts and add a
 
 ### Walk-through Video Link
 
-<a>link</a>
+<a>https://app.screencastify.com/v3/watch/QqKYVax6tXb8GuOJHrb9</a>
 
 ### Sources
 
