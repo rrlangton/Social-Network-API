@@ -21,14 +21,15 @@ const reactionController = {
     },
 
     async deleteReaction(req, res) {
+        console.log(req.params);
         try {
             const dbReactionData = await Thought.findOneAndUpdate(
                 {_id: req.params.thoughtId},
                 { 
                     $pull: { 
-                        reactions: req.params.reactionId 
+                        reactions:{reactionId: req.params.reactionId}
                     } 
-                })
+                },{new:true});
             res.json(dbReactionData)
         } catch (err) {
             console.log(err);
